@@ -1,40 +1,52 @@
 package jm.task.core.jdbc.service;
 
 import jm.task.core.jdbc.dao.UserDao;
+import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private UserDao userDaoJDBC = new UserDaoJDBCImpl();
+    private UserDao userDao;
+
+    public UserServiceImpl() {
+        this.userDao = new UserDaoJDBCImpl();
+    }
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public void createUsersTable() {
-        userDaoJDBC.createUsersTable();
+        userDao.createUsersTable();
     }
 
     @Override
     public void dropUsersTable() {
-        userDaoJDBC.dropUsersTable();
+        userDao.dropUsersTable();
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        userDaoJDBC.saveUser(name, lastName, age);
+        userDao.saveUser(name, lastName, age);
         System.out.println("User: " + name + " добавлен в базу данных");
     }
 
     @Override
     public void removeUserById(long id) {
-        userDaoJDBC.removeUserById(id);
+        userDao.removeUserById(id);
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = userDaoJDBC.getAllUsers();
+        List<User> users = userDao.getAllUsers();
         for (User user : users) {
             System.out.println(user);
         }
@@ -44,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void cleanUsersTable() {
         try {
-            userDaoJDBC.cleanUsersTable();
+            userDao.cleanUsersTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }
