@@ -36,7 +36,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT INTO Users(name, lastName, age) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO kata.users(name, lastName, age) VALUES (?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
@@ -50,18 +50,19 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        String sql = "DELETE FROM Users WHERE id = ?";
+        String sql = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();}
-        catch (SQLException e) {
-            System.err.println("Ошибка при удалении пользователя: " + e.getMessage());}
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Ошибка при удалении пользователя: " + e.getMessage());
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM Users";
+        String sql = "SELECT * FROM users";
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
@@ -69,7 +70,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 String name = resultSet.getString("name");
                 String lastName = resultSet.getString("lastName");
                 byte age = resultSet.getByte("age");
-                list.add(new User(id, name, lastName, age));
+                list.add(new User(name, lastName, age));
             }
         } catch (SQLException e) {
             System.err.println("Ошибка при получении всех пользователей: " + e.getMessage());
@@ -79,10 +80,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        String sql = "TRUNCATE TABLE Users";
+        String sql = "TRUNCATE TABLE users";
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);}
-        catch (SQLException e) {
-            System.err.println("Ошибка при очистке таблицы: " + e.getMessage());}
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            System.err.println("Ошибка при очистке таблицы: " + e.getMessage());
+        }
     }
 }

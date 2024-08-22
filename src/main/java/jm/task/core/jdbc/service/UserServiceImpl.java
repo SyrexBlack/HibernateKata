@@ -2,7 +2,6 @@ package jm.task.core.jdbc.service;
 
 import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
-import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
 import java.sql.SQLException;
@@ -12,15 +11,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public UserServiceImpl() {
-        this.userDao = new UserDaoJDBCImpl();
-    }
-
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+        this.userDao = new UserDaoHibernateImpl();
     }
 
     @Override
@@ -58,7 +49,7 @@ public class UserServiceImpl implements UserService {
         try {
             userDao.cleanUsersTable();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
